@@ -14,7 +14,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _chatController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> _chatHistory = [];
+  final List<Map<String, dynamic>> _chatHistory = [];
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             //get max height
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
@@ -35,7 +35,7 @@ class _ChatPageState extends State<ChatPage> {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index){
                 return Container(
-                  padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
+                  padding: const EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
                   child: Align(
                     alignment: (_chatHistory[index]["isSender"]?Alignment.topRight:Alignment.topLeft),
                     child: Container(
@@ -49,9 +49,9 @@ class _ChatPageState extends State<ChatPage> {
                             offset: const Offset(0, 3),
                           ),
                         ],
-                        color: (_chatHistory[index]["isSender"]?Color(0xFFF69170):Colors.white),
+                        color: (_chatHistory[index]["isSender"]?const Color(0xFFF69170):Colors.white),
                       ),
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Text(_chatHistory[index]["message"], style: TextStyle(fontSize: 15, color: _chatHistory[index]["isSender"]?Colors.white:Colors.black)),
                     ),
                   ),
@@ -146,7 +146,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getAnswer() async {
-    final url = "https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=<AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo>";
+    const url = "https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=<AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo>";
     final uri = Uri.parse(url);
     List<Map<String,String>> msg = [];
     for (var i = 0; i < _chatHistory.length; i++) {

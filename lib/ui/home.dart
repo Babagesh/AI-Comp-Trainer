@@ -39,13 +39,13 @@ class HomePage extends StatelessWidget {
                           const Padding(
                             padding: EdgeInsets.only(top: 16.0, left: 16.0),
                             child: (
-                              Text("Hi! You Can Ask Me", style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white))
+                              Text("Hi! You Can Ask Me", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white))
                             ),
                           ),
                           const Padding(
                             padding: EdgeInsets.only(left: 16.0),
                             child: (
-                                Text("Anything", style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white))
+                                Text("Anything", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white))
                             ),
                           ),
                           Padding(
@@ -56,8 +56,8 @@ class HomePage extends StatelessWidget {
                                   Navigator.pushNamed(context, '/chat');
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                                  foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
                                 ),
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16.0),
