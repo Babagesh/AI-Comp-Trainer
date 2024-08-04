@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
-        home:const MainPage(),
+        home:MainPage(),
       ),
     );
   }
@@ -35,8 +35,8 @@ class MyAppState extends ChangeNotifier
 
 class MainPage extends StatelessWidget
 {
-  const MainPage({super.key});
-
+  MainPage({super.key});
+  var selectedIndex = 0;
   @override
   Widget build(BuildContext context)
   {
@@ -46,18 +46,38 @@ class MainPage extends StatelessWidget
         return Scaffold
         (
           appBar: AppBar(
-            title: const Text('Test'),
+            title: const Text('Lesson Plan'),
             centerTitle: true,
           ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            body: Row(
+              children: 
+              [
+                SafeArea(
+                  child: NavigationRail(
+                    extended: constraints.maxWidth >= 600,
+                    destinations:[
+                      NavigationRailDestination(
+                        icon: Icon(Icons.chat_bubble_outline),
+                        label: Text('Chatbox'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.history),
+                        label: Text('History'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.book_online_outlined),
+                        label: Text('Lesson Plan')
+                      ),
+                    ],
+                    selectedIndex : selectedIndex,
+                  ),
+                ),
                 Expanded(
                   child: Container(
                     color: Theme.of(context).colorScheme.primaryContainer,
-                    child: CalendarWidget(),
+                    child: CalendarPage(),
                   ),
-                ),
+                ),     
               ],
             ),
           );
