@@ -21,6 +21,7 @@ dependencies:
   english_words: any
   provider: any
   firebase_database: ^10.4.0
+  env_variables: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  env_variables:
+    dependency: "direct main"
+    description:
+      name: env_variables
+      sha256: "9484d893e057d2e724f02f6d185b3c9785c54f706ceb8661baf5235dacd169c0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:

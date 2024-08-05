@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:env_variables/env_variables.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
@@ -146,7 +148,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getAnswer() async {
-    const url = "https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=<AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo>";
+    String url = EnvVariables.fromEnvironment('GEMINI_APP_KEY');
     final uri = Uri.parse(url);
     List<Map<String,String>> msg = [];
     for (var i = 0; i < _chatHistory.length; i++) {
