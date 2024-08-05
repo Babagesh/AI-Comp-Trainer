@@ -67,13 +67,13 @@ class _MainPageState extends State<MainPage> {
       default:
       throw UnimplementedError('no widget for $selectedIndex');
     }
-    return LayoutBuilder(
+    Widget lessonBuild () => LayoutBuilder(
       builder: (context, constraints)
       {
         return Scaffold
         (
             appBar: AppBar(
-            title: const Text('Welcome to your personal coach!'),
+            title: const Text('Welcome to your Lesson Plan!'),
             centerTitle: true,
           ),
             body: Row(
@@ -124,7 +124,125 @@ class _MainPageState extends State<MainPage> {
             ),
           );
       }
-    ); 
+    );
+    Widget chatBuild () => LayoutBuilder(
+      builder: (context, constraints)
+      {
+        return Scaffold
+        (
+            appBar: AppBar(
+            title: const Text('Ask any question!'),
+            centerTitle: true,
+          ),
+            body: Row(
+              children: 
+              [
+                SafeArea(
+                  child: NavigationRail(
+                    extended: constraints.maxWidth >= 600,
+                    destinations:const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.chat_bubble_outline),
+                        label: Text('Chatbox'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.history),
+                        label: Text('History'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.book_online_outlined),
+                        label: Text('Lesson Plan')
+                      ),
+                    ],
+                    selectedIndex : selectedIndex,
+                    onDestinationSelected: (value)
+                    {
+                      setState(()
+                        {
+                          selectedIndex = value;
+                        });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: page,
+                    
+                  ),
+                ),     
+              ],
+            ),
+          );
+      }
+    );
+    Widget historyBuild () => LayoutBuilder(
+      builder: (context, constraints)
+      {
+        return Scaffold
+        (
+            appBar: AppBar(
+            title: const Text('Review your past responses!'),
+            centerTitle: true,
+          ),
+            body: Row(
+              children: 
+              [
+                SafeArea(
+                  child: NavigationRail(
+                    extended: constraints.maxWidth >= 600,
+                    destinations:const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.chat_bubble_outline),
+                        label: Text('Chatbox'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.history),
+                        label: Text('History'),
+                        ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.book_online_outlined),
+                        label: Text('Lesson Plan')
+                      ),
+                    ],
+                    selectedIndex : selectedIndex,
+                    onDestinationSelected: (value)
+                    {
+                      setState(()
+                        {
+                          selectedIndex = value;
+                        });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: page,
+                    
+                  ),
+                ),     
+              ],
+            ),
+          );
+      }
+    );
+
+    if(selectedIndex == 0)
+    {
+      return chatBuild();
+    }
+    else if(selectedIndex == 1) {
+      return historyBuild();
+    }
+    else if(selectedIndex == 2)
+    {
+      return lessonBuild();
+    }
+    else
+    {
+      return chatBuild();
+    }
     
   }
 
