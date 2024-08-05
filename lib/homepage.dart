@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'calendar_widget.dart';
 import 'lessonplan.dart';
+import 'ui/chat.dart';
 
 void main()
   {
@@ -54,14 +55,14 @@ class _MainPageState extends State<MainPage> {
     {
       case 0:
       // Will be the chatpage()
-        page = const CalendarPage();
+        page = ChatPage();
         break;
       case 1:
       // Will be historypage()
-        page = const CalendarPage();
+        page = CalendarPage();
         break;
       case 2:
-        page = const CalendarPage();
+        page = CalendarPage();
         break;
       default:
       throw UnimplementedError('no widget for $selectedIndex');
@@ -71,8 +72,8 @@ class _MainPageState extends State<MainPage> {
       {
         return Scaffold
         (
-          appBar: AppBar(
-            title: const Text('Lesson Plan'),
+            appBar: AppBar(
+            title: const Text('Welcome to your personal coach!'),
             centerTitle: true,
           ),
             body: Row(
@@ -126,4 +127,5 @@ class _MainPageState extends State<MainPage> {
     ); 
     
   }
+
 }
