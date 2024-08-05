@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class CalendarPage extends StatelessWidget
 {
+  const CalendarPage({super.key});
+
   @override
   Widget build(BuildContext context)
   {
@@ -13,14 +15,15 @@ class CalendarPage extends StatelessWidget
         for(int i = 1; i < 6; i++)
           ListTile(
             leading: Text(i.toString()),
-            title: Text('AI recommended')
+            title: const Text('AI recommended')
           ),
         Expanded(
           child: Container(
             color: Theme.of(context).colorScheme.primaryContainer,
-            child: CalendarWidget()
+            child: const CalendarWidget()
           ),
         ),
+        
       ],
     ),
     );
@@ -29,6 +32,8 @@ class CalendarPage extends StatelessWidget
 }
 
 class CalendarWidget extends StatelessWidget{
+  const CalendarWidget({super.key});
+
   @override
   Widget build(BuildContext context)
   {
@@ -36,5 +41,6 @@ class CalendarWidget extends StatelessWidget{
       view: CalendarView.week,
       initialSelectedDate: DateTime.now(),
     );
+    
   }
 }
