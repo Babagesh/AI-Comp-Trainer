@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:env_variables/env_variables.dart';
+import 'dart:io';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
@@ -148,8 +147,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getAnswer() async {
-    String url = EnvVariables.fromEnvironment('GEMINI_APP_KEY');
-    final uri = Uri.parse(url);
+    final apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
     List<Map<String,String>> msg = [];
     for (var i = 0; i < _chatHistory.length; i++) {
       msg.add({"content": _chatHistory[i]["message"]});
@@ -165,12 +164,14 @@ class _ChatPageState extends State<ChatPage> {
       "topK": 1
     };
 
-    final response = await http.post(uri, body: jsonEncode(request));
+    // final response = await http.post(uri, body: jsonEncode(request));
+    final content = [Content.text(jsonEncode(request))];
+    final response = await model.generateContent(content);
 
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": json.decode(response.body)["candidates"][0]["content"],
+        "message": response.text,
         "isSender": false,
       });
     });

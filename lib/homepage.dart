@@ -55,14 +55,14 @@ class _MainPageState extends State<MainPage> {
     {
       case 0:
       // Will be the chatpage()
-        page = ChatPage();
+        page = const ChatPage();
         break;
       case 1:
       // Will be historypage()
-        page = CalendarPage();
+        page = const CalendarPage();
         break;
       case 2:
-        page = CalendarPage();
+        page = const CalendarPage();
         break;
       default:
       throw UnimplementedError('no widget for $selectedIndex');
