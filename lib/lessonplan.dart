@@ -7,6 +7,14 @@ class EventProvider extends ChangeNotifier
   final List<Event> _events = [];
   List<Event> get events => _events;
 
+  DateTime _selectedDate = DateTime.now();
+
+  DateTime get SelectedDate => _selectedDate;
+
+  void setDate(DateTime date) => _selectedDate = date;
+
+  List<Event> get eventsOfSelectedDate => _events;
+
   void addEvent(Event event)
   {
     _events.add(event);
@@ -174,6 +182,7 @@ class _EventEditingPageState extends State<EventEditingPage>{
         return date.add(time);
       }
       else{
+        final time;
         final timeOfDay = await showTimePicker(
           context: context,
           initialTime: TimeOfDay.fromDateTime(initialDate),
@@ -181,7 +190,13 @@ class _EventEditingPageState extends State<EventEditingPage>{
           if(timeOfDay == null) return null;
 
           final date = DateTime(initialDate.year, initialDate.month,initialDate.day);
-          final time = Duration(hours: timeOfDay.hour,minutes: timeOfDay.minute);
+          if(date.isAfter(initialDate))
+          {
+            time = DateTime(date.hour, date.minute);
+          }
+          else{
+            time = Duration(hours: timeOfDay.hour,minutes: timeOfDay.minute);
+          } 
           return date.add(time);
       }
     }
