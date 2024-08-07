@@ -19,6 +19,7 @@ class EventDataSource extends CalendarDataSource{
     DateTime getEndTime(int index) => getEvent(index).to;
     @override
     String getSubject(int index) => getEvent(index).title;
+    
   }
 class CalendarPage extends StatelessWidget
 {
@@ -73,14 +74,49 @@ class _TasksWidgetState extends State<TasksWidget>
       );
     }
     return SfCalendarTheme(
-      data: SfCalendarThemeData(),
+      data: SfCalendarThemeData(
+      timeTextStyle: TextStyle(fontSize: 16, color: Colors.black)
+      ),
       child: SfCalendar(
         view: CalendarView.timelineDay,
         dataSource: EventDataSource(provider.events),
         initialDisplayDate: provider.SelectedDate,
+        appointmentBuilder: appointmentBuilder,
+        todayHighlightColor: Colors.black,
+        selectionDecoration: BoxDecoration(
+          color: Colors.transparent,
+        ),
+        onTap: (details) {},
       ),
     );
   }
+  Widget appointmentBuilder(
+    BuildContext context,
+    CalendarAppointmentDetails details,
+  ){
+      final event = details.appointments.first;
+
+      return Container(
+        width: details.bounds.width,
+        height: details.bounds.height,
+        decoration: BoxDecoration(
+          color: event.backgroundColor.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+          event.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        ),
+      );
+    }
 }
 class CalendarWidget extends StatelessWidget{
 
