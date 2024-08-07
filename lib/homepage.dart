@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget
   Widget build(BuildContext context)
   {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+      create: (context) => EventProvider(),
       child: MaterialApp(
         title: 'Test App',
         theme: ThemeData(

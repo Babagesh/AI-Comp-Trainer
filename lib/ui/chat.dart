@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class ChatPage extends StatefulWidget {
@@ -26,7 +25,6 @@ class _ChatPageState extends State<ChatPage> {
       body: Stack(
         children: [
           SizedBox(
-            //get max height
             height: MediaQuery.of(context).size.height - 160,
             child: ListView.builder(
               itemCount: _chatHistory.length,
@@ -147,7 +145,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getAnswer() async {
-    final apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+    const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
     List<Map<String,String>> msg = [];
     for (var i = 0; i < _chatHistory.length; i++) {
@@ -164,7 +162,6 @@ class _ChatPageState extends State<ChatPage> {
       "topK": 1
     };
 
-    // final response = await http.post(uri, body: jsonEncode(request));
     final content = [Content.text(jsonEncode(request))];
     final response = await model.generateContent(content);
 

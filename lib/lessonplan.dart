@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+class EventProvider extends ChangeNotifier
+{
+  final List<Event> _events = [];
+  List<Event> get events => _events;
 
+  void addEvent(Event event)
+  {
+    _events.add(event);
+
+    notifyListeners();
+  }
+}
 
 class EventEditingPage extends StatefulWidget{
   final Event? event;
@@ -64,7 +76,7 @@ class _EventEditingPageState extends State<EventEditingPage>{
         shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
       ),
-      onPressed: () {},
+      onPressed: saveForm,
       icon: const Icon(Icons.done),
       label: const Text('Save'),
     ),
@@ -75,7 +87,7 @@ class _EventEditingPageState extends State<EventEditingPage>{
       border: UnderlineInputBorder(),
       hintText: 'Add Event',
     ),
-    onFieldSubmitted: (_) {},
+    onFieldSubmitted: (_) => saveForm(),
     validator: (title) => 
       title != null && title.isEmpty ? 'Please add an event!' : null,
     controller: titleController,
@@ -83,6 +95,7 @@ class _EventEditingPageState extends State<EventEditingPage>{
   Widget buildDateTimePickers() => Column(
     children: [
       buildFrom(),
+      buildTo(),
     ],
   );
   Widget buildFrom() => buildHeader(
@@ -93,18 +106,86 @@ class _EventEditingPageState extends State<EventEditingPage>{
         flex: 2,
         child: buildDropdownField(
           text: ToDate(fromDate),
-          onClicked: () {},
+          onClicked: () => pickFromDateTime(pickDate: true),
         ),
       ),
       Expanded(
         child: buildDropdownField(
           text: toTime(fromDate),
-          onClicked: () {},
+          onClicked: () => pickFromDateTime(pickDate: false),
         ),
       ),
     ],
   ),
   );
+  Widget buildTo() => buildHeader(
+    header: 'TO',
+    child: Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: buildDropdownField(
+            text: ToDate(toDate), 
+            onClicked: ()=> pickToDateTime(pickDate: true),
+            ),
+        ),
+        Expanded(
+          child: buildDropdownField(
+            text: toTime(toDate),
+            onClicked: () => pickToDateTime(pickDate: false),
+          ),
+        ),
+      ],
+      )
+  );
+  Future pickFromDateTime({required bool pickDate}) async{
+    final date = await pickDateTime(fromDate, pickDate: pickDate);
+    if(date == null) return;
+    if(date.isAfter(toDate))
+    {
+      toDate = DateTime(date.year, date.month,date.day, date.hour,date.minute);
+    }
+    setState(() => fromDate = date);
+  }
+  Future pickToDateTime({required bool pickDate}) async{
+    final date = await pickDateTime(
+      toDate,
+      pickDate: pickDate,
+      firstDate: pickDate ?fromDate : null,
+    );
+    if(date == null) return;
+    setState(() => toDate = date);
+  }
+  Future <DateTime?> pickDateTime(
+    DateTime initialDate,{
+      required bool pickDate,
+      DateTime? firstDate,
+    }) async{
+      if (pickDate)
+      {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: initialDate,
+          firstDate: firstDate ?? DateTime(2024,8),
+          lastDate: DateTime(2101),
+        );
+        if(date == null) return null;
+        final time = Duration(hours: initialDate.hour, minutes: initialDate.minute);
+        return date.add(time);
+      }
+      else{
+        final timeOfDay = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.fromDateTime(initialDate),
+          );
+          if(timeOfDay == null) return null;
+
+          final date = DateTime(initialDate.year, initialDate.month,initialDate.day);
+          final time = Duration(hours: timeOfDay.hour,minutes: timeOfDay.minute);
+          return date.add(time);
+      }
+    }
+
   Widget buildDropdownField({
     required String text,
     required VoidCallback onClicked,
@@ -126,6 +207,23 @@ class _EventEditingPageState extends State<EventEditingPage>{
         child,
       ],
     );
+    Future saveForm() async
+    {
+      final isValid = _formKey.currentState!.validate();
+      if(isValid)
+      {
+        final event = Event(
+          title: titleController.text,
+          from: fromDate,
+          to: toDate,
+        );
+
+        final provider = Provider.of<EventProvider>(context,listen:false);
+        provider.addEvent(event);
+
+        Navigator.of(context).pop();
+      }
+    }
     static String ToDate(DateTime dateTime)
   {
     final date = DateFormat.yMMMEd().format(dateTime);
@@ -136,6 +234,8 @@ class _EventEditingPageState extends State<EventEditingPage>{
     final time = DateFormat.Hm().format(dateTime);
     return time;
   }
+
+  
 }
 
 class Event{
