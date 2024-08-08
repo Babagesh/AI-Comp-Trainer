@@ -16,6 +16,14 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController _scrollController = ScrollController();
   final List<Map<String, dynamic>> _chatHistory = [];
 
+  String curText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    firstQ();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,13 +113,13 @@ class _ChatPageState extends State<ChatPage> {
                             "message": _chatController.text,
                             "isSender": true,
                           });
+                          curText = _chatController.text;
                           _chatController.clear();
                         }
                       });
                       _scrollController.jumpTo(
                         _scrollController.position.maxScrollExtent,
                       );
-
                       getAnswer();
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
@@ -145,36 +153,61 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void getAnswer() async {
-    const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
-    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
-    List<Map<String,String>> msg = [];
-    for (var i = 0; i < _chatHistory.length; i++) {
-      msg.add({"content": _chatHistory[i]["message"]});
-    }
+    switch (curText) {
+      case "1":
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "You chose Putnam practice.",
+          "isSender": false,
+        });
+      case "2":
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "You chose LeetCode practice.",
+          "isSender": false,
+        });
+      default:
+        const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+        final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+        List<Map<String,String>> msg = [];
+        for (var i = 0; i < _chatHistory.length; i++) {
+          msg.add({"content": _chatHistory[i]["message"]});
+        }
 
-    Map<String, dynamic> request = {
-      "prompt": {
-        "messages": [msg]
-      },
-      "temperature": 0.25,
-      "candidateCount": 1,
-      "topP": 1,
-      "topK": 1
-    };
+        Map<String, dynamic> request = {
+          "prompt": {
+            "messages": [msg]
+          },
+          "temperature": 0.25,
+          "candidateCount": 1,
+          "topP": 1,
+          "topK": 1
+        };
 
-    final content = [Content.text(jsonEncode(request))];
-    final response = await model.generateContent(content);
+        final content = [Content.text(jsonEncode(request))];
+        final response = await model.generateContent(content);
 
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": response.text,
+            "isSender": false,
+          });
+        });
+
+        _scrollController.jumpTo(
+          _scrollController.position.maxScrollExtent,
+        );
+        }
+      }
+
+  void firstQ() {
     setState(() {
-      _chatHistory.add({
-        "time": DateTime.now(),
-        "message": response.text,
-        "isSender": false,
-      });
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "Type the number of what you would like to practice:\n1. Putnam\n2. LeetCode",
+          "isSender": false,
+        });
     });
-
-    _scrollController.jumpTo(
-      _scrollController.position.maxScrollExtent,
-    );
   }
 }
