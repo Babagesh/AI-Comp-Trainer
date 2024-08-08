@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'calendar_widget.dart';
 import 'lessonplan.dart';
 import 'ui/chat.dart';
+import 'signin.dart';
 
 void main()
   {

@@ -18,7 +18,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   google_generative_ai: ^0.4.4
   syncfusion_flutter_calendar: ^26.2.7
-
+  assets:
+    - assets/images/
   english_words: any
   provider: any
   firebase_database: ^10.4.0
