@@ -15,8 +15,7 @@ class MyApp extends StatelessWidget
     return MaterialApp(
       title: 'CompTrainer Signin',
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        primarySwatch: Colors.blue,
       ),
       home: const SignInScreen(),
     );
