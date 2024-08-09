@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
-
+import 'signin.dart';
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
   const ChatPage({super.key});
@@ -28,7 +28,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chat", style: TextStyle(fontWeight: FontWeight.bold),),
+         title: const Text("Chat", style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: Stack(
         children: [

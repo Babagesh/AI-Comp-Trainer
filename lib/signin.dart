@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mathtrainer/homepage.dart';
 import 'reusable_widgets.dart';
+import 'signup.dart';
 class SignInScreen extends StatefulWidget{
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -41,7 +43,10 @@ class _SignInScreenState extends State<SignInScreen>
                   SizedBox(
                     height: 20,
                   ),
-                  signUpButton(context, true, () {})
+                  signUpButton(context, true, () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                  }),
+                  signUpOption()
               ],
               ),
               ),
@@ -50,5 +55,25 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  
+  Row signUpOption()
+  {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Dont have an account?", 
+        style: TextStyle(color: Colors.white70)),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(context, 
+            MaterialPageRoute(builder: (context) => SignUpScreen())
+          );
+        },
+        child: const Text(
+          " Sign Up",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      )
+      ]
+    );
+  }
 }

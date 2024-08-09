@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mathtrainer/ui/home.dart';
-import 'package:mathtrainer/ui/chat.dart';
+import 'package:mathtrainer/chat.dart';
 
 void main() {
   runApp(const MyApp());

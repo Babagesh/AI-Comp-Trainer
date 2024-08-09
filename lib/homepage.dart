@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'calendar_widget.dart';
 import 'lessonplan.dart';
-import 'ui/chat.dart';
+import 'chat.dart';
 import 'signin.dart';
 
 void main()
@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget
     return ChangeNotifierProvider(
       create: (context) => EventProvider(),
       child: MaterialApp(
-        title: 'Test App',
+        title: 'Competition App',
         theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
-        home:const MainPage(),
+        home:MainPage(),
       ),
     );
   }
@@ -74,9 +74,21 @@ class _MainPageState extends State<MainPage> {
         return Scaffold
         (
             appBar: AppBar(
-            title: const Text('Welcome to your Lesson Plan!'),
-            centerTitle: true,
+            title: Row(
+              children: <Widget>[
+                const Text('Welcome to your Lesson Plan!'),
+                SizedBox(
+                        width: 2050,
+                      ),
+                ElevatedButton(
+                      child: Text('Logout'),
+                      onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                    },
+                ),
+            ],
           ),
+            ),
             body: Row(
               children: 
               [
@@ -132,8 +144,20 @@ class _MainPageState extends State<MainPage> {
         return Scaffold
         (
             appBar: AppBar(
-            title: const Text('Ask any question!'),
-            centerTitle: true,
+            title: Row(
+              children: <Widget>[
+                const Text('Welcome to your Lesson Plan!'),
+                SizedBox(
+                        width: 2050,
+                      ),
+                ElevatedButton(
+                      child: Text('Logout'),
+                      onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                    },
+                ),
+            ],
+          ),
           ),
             body: Row(
               children: 
@@ -169,7 +193,6 @@ class _MainPageState extends State<MainPage> {
                   child: Container(
                     color: Theme.of(context).colorScheme.primaryContainer,
                     child: page,
-                    
                   ),
                 ),     
               ],
@@ -183,8 +206,20 @@ class _MainPageState extends State<MainPage> {
         return Scaffold
         (
             appBar: AppBar(
-            title: const Text('Review your past responses!'),
-            centerTitle: true,
+            title: Row(
+              children: <Widget>[
+                const Text('Welcome to your Lesson Plan!'),
+                SizedBox(
+                        width: 2050,
+                      ),
+                ElevatedButton(
+                      child: Text('Logout'),
+                      onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                    },
+                ),
+            ],
+          ),
           ),
             body: Row(
               children: 
