@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mathtrainer/homepage.dart';
 import 'reusable_widgets.dart';
 import 'signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class SignInScreen extends StatefulWidget{
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -44,7 +45,14 @@ class _SignInScreenState extends State<SignInScreen>
                     height: 20,
                   ),
                   signUpButton(context, true, () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                    FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailTextController.text, password: _passwordTextController.text).then((value)
+                    {
+                      print("Signed in!");
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                    }).onError((error, stackTrace)
+                    {
+                      print("Error ${error.toString()}");
+                    });
                   }),
                   signUpOption()
               ],

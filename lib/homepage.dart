@@ -4,7 +4,8 @@ import 'calendar_widget.dart';
 import 'lessonplan.dart';
 import 'chat.dart';
 import 'signin.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 void main()
   {
     runApp(const MyApp());
@@ -83,7 +84,11 @@ class _MainPageState extends State<MainPage> {
                 ElevatedButton(
                       child: Text('Logout'),
                       onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        FirebaseAuth.instance.signOut().then((value)
+                        {
+                          print("Signed Out");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        });
                     },
                 ),
             ],
@@ -153,7 +158,11 @@ class _MainPageState extends State<MainPage> {
                 ElevatedButton(
                       child: Text('Logout'),
                       onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        FirebaseAuth.instance.signOut().then((value)
+                        {
+                          print("Signed Out");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        });
                     },
                 ),
             ],
@@ -215,7 +224,11 @@ class _MainPageState extends State<MainPage> {
                 ElevatedButton(
                       child: Text('Logout'),
                       onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        FirebaseAuth.instance.signOut().then((value)
+                        {
+                          print("Signed Out");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                        });
                     },
                 ),
             ],

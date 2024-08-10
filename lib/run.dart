@@ -2,8 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:mathtrainer/lessonplan.dart';
 import 'package:provider/provider.dart';
 import 'signin.dart';
-void main()
+import 'package:firebase_core/firebase_core.dart';
+void main() async
 {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+       apiKey: "AIzaSyC3kayiXpsr62G0cI9PwZOzGokyPJAOM6A",
+      authDomain: "comp-trainer-c58b7.firebaseapp.com",
+      projectId: "comp-trainer-c58b7",
+     storageBucket: "comp-trainer-c58b7.appspot.com",
+      messagingSenderId: "746406856725",
+      appId: "1:746406856725:web:793c1fc7daad12153a261c",
+      measurementId: "G-RY9K9W57RS",
+    ),
+  );
   runApp(const MyApp());
 }
 
