@@ -10,11 +10,11 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.6
-
   english_words: any
   env_variables: ^1.0.1
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
+  firebase_database: ^10.4.0
   flutter:
     sdk: flutter
   google_generative_ai: ^0.4.4
@@ -25,6 +25,7 @@ dependencies:
   provider: any
   syncfusion_flutter_calendar: ^26.2.7
   syncfusion_flutter_core: ^26.2.8
+  timeline_tile: ^2.0.0
 dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:

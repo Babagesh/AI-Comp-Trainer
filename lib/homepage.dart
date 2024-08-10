@@ -6,6 +6,7 @@ import 'chat.dart';
 import 'signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'history.dart';
 void main()
   {
     runApp(const MyApp());
@@ -61,7 +62,7 @@ class _MainPageState extends State<MainPage> {
         break;
       case 1:
       // Will be historypage()
-        page = const CalendarPage();
+        page = const HistoryPage();
         break;
       case 2:
         page = const CalendarPage();
@@ -77,9 +78,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
+                SizedBox(width: 1150),
                 const Text('Welcome to your Lesson Plan!'),
                 SizedBox(
-                        width: 2050,
+                        width: 900,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),
@@ -151,9 +153,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
+                SizedBox(width: 1150),
                 const Text('Welcome to your Lesson Plan!'),
                 SizedBox(
-                        width: 2050,
+                        width: 900,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),
@@ -217,9 +220,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
-                const Text('Welcome to your Lesson Plan!'),
+                SizedBox(width: 1150),
+                const Text('Welcome to your Chat History!'),
                 SizedBox(
-                        width: 2050,
+                        width: 900,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),
