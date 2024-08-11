@@ -3,6 +3,7 @@ import 'package:mathtrainer/lessonplan.dart';
 import 'package:provider/provider.dart';
 import 'signin.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ void main() async
       measurementId: "G-RY9K9W57RS",
     ),
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget
@@ -28,7 +29,6 @@ class MyApp extends StatelessWidget
   Widget build(BuildContext context)
   {
     return MaterialApp(
-      
       title: 'CompTrainer Signin',
       theme: ThemeData(
         primarySwatch: Colors.blue,
