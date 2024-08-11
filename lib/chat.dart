@@ -216,10 +216,12 @@ class _ChatPageState extends State<ChatPage> {
     final content = [Content.text(jsonEncode(request))];
     final response = await model.generateContent(content);
     
-    _chatHistory.add({
-      "time": DateTime.now(),
-      "message": response.text,
-      "isSender": false,
-    });
+    setState() {
+      _chatHistory.add({
+        "time": DateTime.now(),
+        "message": response.text,
+        "isSender": false,
+      });
+    }
   }
 }
