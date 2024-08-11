@@ -176,6 +176,7 @@ class _ChatPageState extends State<ChatPage> {
           "isSender": false,
         });
         
+        /*
         const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
         final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
         List<Map<String,String>> msg = [];
@@ -207,6 +208,7 @@ class _ChatPageState extends State<ChatPage> {
         _scrollController.jumpTo(
           _scrollController.position.maxScrollExtent,
         );
+        */
     } 
   }
 
