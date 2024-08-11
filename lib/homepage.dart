@@ -73,8 +73,10 @@ class _MainPageState extends State<MainPage> {
     Widget lessonBuild () => LayoutBuilder(
       builder: (context, constraints)
       {
-        return Scaffold
+        return ChangeNotifierProvider
         (
+            create: (context) => EventProvider(),
+            child: Scaffold(
             appBar: AppBar(
             title: Row(
               children: <Widget>[
@@ -141,6 +143,7 @@ class _MainPageState extends State<MainPage> {
                         MaterialPageRoute(builder: (context) => const EventEditingPage())
                       ),
                       child: const Icon(Icons.add, color: Colors.white),
+            ),
             ),
           );
       }
