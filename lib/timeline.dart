@@ -29,13 +29,14 @@ Widget build (BuildContext context)
       isFirst: isFirst,
       isLast: isLast,
       beforeLineStyle: LineStyle(
-        color: isPast ? Color(0xFF6495ED): Color(0xFFADD8E6),
+        color: isPast ? Color(0xFF6495ED): Color(0xFF6495ED),
     ),
     indicatorStyle: IndicatorStyle(
       width: 40,
       color: isPast ? Color(0xFF0000FF): Color(0xFF00FFFF),
       iconStyle: IconStyle(
         iconData: Icons.check_circle,
+        // Make the second color red if the user gets the question wrong
       color: isPast ? Colors.greenAccent:Color(0xFFB0A695),
     ),
     ),
