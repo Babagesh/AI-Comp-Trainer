@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'signin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
   const ChatPage({super.key});
@@ -22,6 +24,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     firstQ();
+    populateNewUser();
   }
 
   @override
@@ -157,7 +160,7 @@ class _ChatPageState extends State<ChatPage> {
       case "1":
         _chatHistory.add({
           "time": DateTime.now(),
-          "message": "You chose Putnam practice.",
+          "message": generateQuestion("Putnam"),
           "isSender": false,
         });
       case "2":
@@ -167,6 +170,13 @@ class _ChatPageState extends State<ChatPage> {
           "isSender": false,
         });
       default:
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "That is not a valid option, please try again.",
+          "isSender": false,
+        });
+        
+        /*
         const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
         final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
         List<Map<String,String>> msg = [];
@@ -198,16 +208,55 @@ class _ChatPageState extends State<ChatPage> {
         _scrollController.jumpTo(
           _scrollController.position.maxScrollExtent,
         );
-        }
-      }
+        */
+    } 
+  }
 
   void firstQ() {
     setState(() {
         _chatHistory.add({
           "time": DateTime.now(),
-          "message": "Type the number of what you would like to practice:\n1. Putnam\n2. LeetCode",
+          "message": "What would you like to do:\n1. Practice Putnam\n2. Practice LeetCode",
           "isSender": false,
         });
     });
+  }
+
+  void populateNewUser() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool isNewUser = user.metadata.creationTime?.isAfter(DateTime.now().subtract(Duration(minutes: 5))) ?? false;
+      if(isNewUser) {
+        CollectionReference examples = FirebaseFirestore.instance.collection('examples');
+        examples.add(<String, dynamic>{
+          'type': "Putnam",
+          'topic': "Optimization",
+          'timestamp': DateTime.now(),
+        });
+      }
+    }
+  }
+
+  Future<String?> generateQuestion(String testType) async {
+    const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+    List<Map<String,String>> msg = [];
+    for (var i = 0; i < _chatHistory.length; i++) {
+      msg.add({"content": _chatHistory[i]["message"]});
+    }
+
+    Map<String, dynamic> request = {
+      "prompt": {
+        "messages": [msg]
+      },
+      "temperature": 0.25,
+      "candidateCount": 1,
+      "topP": 1,
+      "topK": 1
+    };
+
+    final content = [Content.text(jsonEncode(request))];
+    final response = await model.generateContent(content);
+    return response.text;
   }
 }
