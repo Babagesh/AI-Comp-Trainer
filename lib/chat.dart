@@ -117,13 +117,13 @@ class _ChatPageState extends State<ChatPage> {
                             "isSender": true,
                           });
                           curText = _chatController.text;
+                          getAnswer();
                           _chatController.clear();
                         }
                       });
                       _scrollController.jumpTo(
                         _scrollController.position.maxScrollExtent,
                       );
-                      getAnswer();
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
                     padding: const EdgeInsets.all(0.0),
@@ -155,17 +155,19 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void getAnswer() async {
+  void getAnswer() {
     switch (curText) {
       case "1": 
         generateQuestion("Putnam", 1);
       case "2":
         generateQuestion("LeetCode", 2);
       default:
-        _chatHistory.add({
-          "time": DateTime.now(),
-          "message": "That is not a valid option, please try again.",
-          "isSender": false,
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": "That is not a valid option, please try again.",
+            "isSender": false,
+          });
         });
     } 
   }
@@ -216,12 +218,12 @@ class _ChatPageState extends State<ChatPage> {
     final content = [Content.text(jsonEncode(request))];
     final response = await model.generateContent(content);
     
-    setState() {
+    setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
         "message": response.text,
         "isSender": false,
       });
-    }
+    });
   }
 }
