@@ -33,10 +33,11 @@ Widget build (BuildContext context)
     ),
     indicatorStyle: IndicatorStyle(
       width: 40,
-      color: isPast ? Color(0xFF0000FF): Color(0xFF00FFFF),
+      color: isPast ? Color(0xFF0000FF): Color(0xFF0000FF),
       iconStyle: IconStyle(
+        // if wrong change icon as well
         iconData: Icons.check_circle,
-        // Make the second color red if the user gets the question wrong
+        // Make the second or first color red if the user gets the question wrong
       color: isPast ? Colors.greenAccent:Color(0xFFB0A695),
     ),
     ),
@@ -59,7 +60,7 @@ class EventPath extends StatelessWidget{
   {
     return Container(
       decoration: BoxDecoration(
-        color: isPast? Color(0xFF6495ED): Color(0xFFADD8E6),
+        color: isPast? Color(0xFF6495ED): Color(0xFF6495ED),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.all(25),
