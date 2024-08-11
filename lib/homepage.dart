@@ -5,7 +5,6 @@ import 'lessonplan.dart';
 import 'chat.dart';
 import 'signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'history.dart';
 void main()
   {
@@ -80,10 +79,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
-                SizedBox(width: 1150),
+                SizedBox(width: MediaQuery.sizeOf(context).width / 2),
                 const Text('Welcome to your Lesson Plan!'),
                 SizedBox(
-                        width: 900,
+                        width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),
@@ -156,10 +155,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
-                SizedBox(width: 1150),
-                const Text('Welcome to your Lesson Plan!'),
+                SizedBox(width: MediaQuery.sizeOf(context).width / 2),
+                const Text('Welcome to your Training!'),
                 SizedBox(
-                        width: 900,
+                        width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),
@@ -223,10 +222,10 @@ class _MainPageState extends State<MainPage> {
             appBar: AppBar(
             title: Row(
               children: <Widget>[
-                SizedBox(width: 1150),
+                SizedBox(width: MediaQuery.sizeOf(context).width / 2),
                 const Text('Welcome to your Chat History!'),
                 SizedBox(
-                        width: 900,
+                        width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
                       child: Text('Logout'),

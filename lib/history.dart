@@ -84,7 +84,6 @@ class _HistoryPageState extends State<HistoryPage>
                     Text(
                       'Last chat item in database - First question asked(index length - 1)',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                      
                     ),
                     Text('    |   Date: {$DateTime.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   ],
