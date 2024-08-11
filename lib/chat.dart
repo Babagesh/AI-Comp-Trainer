@@ -157,58 +157,16 @@ class _ChatPageState extends State<ChatPage> {
 
   void getAnswer() async {
     switch (curText) {
-      case "1":
-        _chatHistory.add({
-          "time": DateTime.now(),
-          "message": generateQuestion("Putnam"),
-          "isSender": false,
-        });
+      case "1": 
+        generateQuestion("Putnam", 1);
       case "2":
-        _chatHistory.add({
-          "time": DateTime.now(),
-          "message": "You chose LeetCode practice.",
-          "isSender": false,
-        });
+        generateQuestion("LeetCode", 2);
       default:
         _chatHistory.add({
           "time": DateTime.now(),
           "message": "That is not a valid option, please try again.",
           "isSender": false,
         });
-        
-        /*
-        const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
-        final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
-        List<Map<String,String>> msg = [];
-        for (var i = 0; i < _chatHistory.length; i++) {
-          msg.add({"content": _chatHistory[i]["message"]});
-        }
-
-        Map<String, dynamic> request = {
-          "prompt": {
-            "messages": [msg]
-          },
-          "temperature": 0.25,
-          "candidateCount": 1,
-          "topP": 1,
-          "topK": 1
-        };
-
-        final content = [Content.text(jsonEncode(request))];
-        final response = await model.generateContent(content);
-
-        setState(() {
-          _chatHistory.add({
-            "time": DateTime.now(),
-            "message": response.text,
-            "isSender": false,
-          });
-        });
-
-        _scrollController.jumpTo(
-          _scrollController.position.maxScrollExtent,
-        );
-        */
     } 
   }
 
@@ -237,7 +195,7 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  Future<String?> generateQuestion(String testType) async {
+  void generateQuestion(String testType, int option) async {
     const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
     List<Map<String,String>> msg = [];
@@ -257,6 +215,11 @@ class _ChatPageState extends State<ChatPage> {
 
     final content = [Content.text(jsonEncode(request))];
     final response = await model.generateContent(content);
-    return response.text;
+    
+    _chatHistory.add({
+      "time": DateTime.now(),
+      "message": response.text,
+      "isSender": false,
+    });
   }
 }
