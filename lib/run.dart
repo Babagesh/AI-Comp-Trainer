@@ -27,15 +27,13 @@ class MyApp extends StatelessWidget
   @override
   Widget build(BuildContext context)
   {
-    return ChangeNotifierProvider(
-      create: (context) => EventProvider(),
-      child: MaterialApp(
+    return MaterialApp(
+      
       title: 'CompTrainer Signin',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: SignInScreen(),
-    ),
     );
   }
 }
