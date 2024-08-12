@@ -174,7 +174,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": "Please re-enter your username.",
+        "message": "Please enter a key.",
         "isSender": false,
       });
     });
@@ -200,7 +200,7 @@ class _ChatPageState extends State<ChatPage> {
           setState(() {
             _chatHistory.add({
               "time": DateTime.now(),
-              "message": "Thanks for re-entering your username!",
+              "message": "Thanks for entering a key!",
               "isSender": false,
             });
           });
