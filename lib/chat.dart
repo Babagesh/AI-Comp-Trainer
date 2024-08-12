@@ -26,7 +26,7 @@ class _ChatPageState extends State<ChatPage> {
   bool completed = false;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     initializeChat();
   }
