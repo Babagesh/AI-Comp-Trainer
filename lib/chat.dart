@@ -21,9 +21,15 @@ class _ChatPageState extends State<ChatPage> {
   String curText = "";
   String username = "";
   bool user = false;
-  final completer = new Completer<void>();
-  late var nextButtonCompleter = completer;
-  bool completed = false;
+
+  final usernameCompleter = Completer<void>();
+  late var uCompleter = usernameCompleter;
+  bool uCompleted = false;
+
+  var answerCompleter = Completer<void>();
+  late var aCompleter = answerCompleter;
+
+  String curQuestion = "";
 
   @override
   void initState() {
@@ -33,8 +39,8 @@ class _ChatPageState extends State<ChatPage> {
 
   void initializeChat() async {
     getUsername();
-    await completer.future;
-    completed = true;
+    await uCompleter.future;
+    uCompleted = true;
     populateNewUser();
     firstQ();
   }
@@ -121,10 +127,13 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(width: 4.0,),
                   MaterialButton(
                     onPressed: (){
-                      if(!completed) {
-                        nextButtonCompleter.complete();
-                      }
                       setState(() {
+                        if(!uCompleted) {
+                          uCompleter.complete();
+                        }
+                        if(curText == "3") {
+                          aCompleter.complete();
+                        }
                         if(_chatController.text.isNotEmpty){
                           _chatHistory.add({
                             "time": DateTime.now(),
@@ -132,7 +141,9 @@ class _ChatPageState extends State<ChatPage> {
                             "isSender": true,
                           });
                           curText = _chatController.text;
-                          getAnswer();
+                          if(curText.substring(0, 1) != "/") {
+                            getAnswer();
+                          }
                           _chatController.clear();
                         }
                       });
@@ -184,6 +195,16 @@ class _ChatPageState extends State<ChatPage> {
     switch (curText) {
       case "1": 
         generateQuestion(1);
+        break;
+      case "2":
+        generateHint();
+        break;
+      case "3":
+        checkAnswer();
+         break;
+      case "4":
+        firstQ();
+        break;
       default:
         if(user) {
           setState(() {
@@ -212,7 +233,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
         _chatHistory.add({
           "time": DateTime.now(),
-          "message": "What would you like to do:\n1. Practice Putnam",
+          "message": "What would you like to do:\n1. Practice Putnam\n2. Get a hint\n3. Answer the question\n4. See full list of options again",
           "isSender": false,
         });
     });
@@ -228,6 +249,7 @@ class _ChatPageState extends State<ChatPage> {
           'type': "Putnam",
           'question': "A grasshopper starts at the origin in the coordinate plane and makes a sequence of hops. Each hop has length 5, and after each hop the grasshopper is at a point whose coordinates are both integers; thus, there are 12 possible locations for the grasshopper after the first hop. What is the smallest number of hops needed for the grasshopper to reach the point (2021,2021)?",
           'topic': "Optimization",
+          'hint': "Use the distance formula.",
           'timestamp': DateTime.now(),
         });
       }
@@ -235,17 +257,62 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void generateQuestion(int option) async {
-  const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
-  final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
 
-  List<Content> content;
+    List<Content> content;
 
-  if (option == 1) {
+    if (option == 1) {
+      final docId = username;
+      final topic = await retrieveField(docId, 'topic');
+      final question = await retrieveField(docId, 'question');
+      
+      content = [Content.text("Give me a Putnam question about $topic similar to $question")];
+
+      try {
+        final response = await model.generateContent(content);
+
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": response.text,
+            "isSender": false,
+          });
+          curQuestion = response.text!;
+        });
+      } catch (e) {
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": "Error generating content: $e",
+            "isSender": false,
+          });
+        });
+      }
+    } else {
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "The option you selected was not valid, please try again.",
+          "isSender": false,
+        });
+      });
+    }
+  }
+
+  Future<String> retrieveField(String documentId, String fieldName) async {
+    DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
+    return (document.data() as Map<String, dynamic>)[fieldName] ?? 'Field not found';
+  }
+
+  void generateHint() async {
+    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+
     final docId = username;
-    final topic = await retrieveField(docId, 'topic');
-    final question = await retrieveField(docId, 'question');
-    
-    content = [Content.text("Give me a Putnam question about $topic similar to $question")];
+    final hint = await retrieveField(docId, "hint");
+
+    var content = [Content.text("Give me a hint for the question, $curQuestion, similar to $hint")];
 
     try {
       final response = await model.generateContent(content);
@@ -266,19 +333,48 @@ class _ChatPageState extends State<ChatPage> {
         });
       });
     }
-  } else {
+  }
+
+  void checkAnswer() async {
+
+    answerCompleter = Completer<void>();
+    aCompleter = answerCompleter;
+
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": "The option you selected was not valid, please try again.",
+        "message": "Please prepend your response with a '/'. Awaiting your answer...",
         "isSender": false,
       });
     });
-  }
-}
 
-  Future<String> retrieveField(String documentId, String fieldName) async {
-    DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
-    return (document.data() as Map<String, dynamic>)[fieldName] ?? 'Field not found';
+    await aCompleter.future;
+
+    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+
+    var content = [Content.text("Compare the answer for $curQuestion to the users answer, $curText. Ignore the '/' at the beginning of the user answer.")];
+
+    try {
+      final response = await model.generateContent(content);
+
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": response.text,
+          "isSender": false,
+        });
+      });
+    } catch (e) {
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "Error generating content: $e",
+          "isSender": false,
+        });
+      });
+    }
+
+    firstQ();
   }
 }
