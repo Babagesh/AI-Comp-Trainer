@@ -241,9 +241,17 @@ class _ChatPageState extends State<ChatPage> {
     List<Content> content;
     switch(option) {
       case 1:
-        final docId = FirebaseFirestore.instance.collection('examples').doc(username).id;
-        final topic = retrieveField(docId, "topic");
-        final question = retrieveField(docId, "question");
+        final docId = username;
+        final ftopic = retrieveField(docId, "topic");
+        final fquestion = retrieveField(docId, "question");
+        String topic = "";
+        String question = "";
+        ftopic.then((String result) {
+          topic = result;
+        });
+        fquestion.then((String result) {
+          question = result;
+        });
         content = [Content.text("Give me a Putnam question about $topic similar to $question")];
       default:
         setState(() {
