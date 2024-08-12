@@ -273,6 +273,6 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<String> retrieveField(String documentId, String fieldName) async {
     DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
-    return (document.data() as Map<String, dynamic>) ['fieldName'];
+    return (document.data() as Map<String, dynamic>) ['fieldName'] ?? '';
   }
 }
