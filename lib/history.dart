@@ -25,28 +25,6 @@ class _HistoryPageState extends State<HistoryPage>
         padding: const EdgeInsets.only(left: 30, right:  30),
         child: ListView(
           children: [
-            TimeLineTileUI(
-              isFirst: true,
-              isLast: false,
-              isPast: true,
-              eventChild: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(children: [
-                    Icon(Icons.book_online, color: Colors.white),
-                    SizedBox(width: 15,),
-                    Text(
-                      'Most recent chat',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    Text('    |   Date: {$DateTime.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                  ],
-                  ),
-                  Text('Question: ', style: TextStyle(color: Colors.white),),
-                  Text('Answer: ', style: TextStyle(color:Colors.white)),
-                ],
-              ),
-            ),
             for(int i = 1; i < 5; i++)
               TimeLineTileUI(
                 isFirst: false, 
@@ -70,29 +48,6 @@ class _HistoryPageState extends State<HistoryPage>
               ],
               ),
             ), 
-            TimeLineTileUI(
-              isFirst: false, 
-              isLast: true, 
-              isPast: false, 
-              eventChild: Column
-              (
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(children: [
-                    Icon(Icons.book, color: Colors.white),
-                    SizedBox(width: 15),
-                    Text(
-                      'Last chat item in database - First question asked(index length - 1)',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    Text('    |   Date: {$DateTime.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                  ],
-                  ),
-                  Text('Question: ', style: TextStyle(color: Colors.white),),
-                  Text('Answer: ', style: TextStyle(color: Colors.white),),
-                ],
-                ),
-              ),
           ],
         )
       ),
