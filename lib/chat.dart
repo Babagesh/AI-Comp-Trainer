@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -158,9 +157,9 @@ class _ChatPageState extends State<ChatPage> {
   void getAnswer() {
     switch (curText) {
       case "1": 
-        generateQuestion("Putnam", 1);
+        generateQuestion(1);
       case "2":
-        generateQuestion("LeetCode", 2);
+        generateQuestion(2);
       default:
         setState(() {
           _chatHistory.add({
@@ -188,8 +187,9 @@ class _ChatPageState extends State<ChatPage> {
       bool isNewUser = user.metadata.creationTime?.isAfter(DateTime.now().subtract(Duration(minutes: 5))) ?? false;
       if(isNewUser) {
         CollectionReference examples = FirebaseFirestore.instance.collection('examples');
-        examples.add(<String, dynamic>{
+        examples.doc("!!!!INSERT CURRENT USER USERNAME HERE!!!!!!").set(<String, dynamic>{
           'type': "Putnam",
+          'question': "A grasshopper starts at the origin in the coordinate plane and makes a sequence of hops. Each hop has length 5, and after each hop the grasshopper is at a point whose coordinates are both integers; thus, there are 12 possible locations for the grasshopper after the first hop. What is the smallest number of hops needed for the grasshopper to reach the point (2021,2021)?",
           'topic': "Optimization",
           'timestamp': DateTime.now(),
         });
@@ -197,9 +197,11 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  void generateQuestion(String testType, int option) async {
+  void generateQuestion(int option) async {
     const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+    
+    /*
     List<Map<String,String>> msg = [];
     for (var i = 0; i < _chatHistory.length; i++) {
       msg.add({"content": _chatHistory[i]["message"]});
@@ -217,7 +219,27 @@ class _ChatPageState extends State<ChatPage> {
 
     final content = [Content.text(jsonEncode(request))];
     final response = await model.generateContent(content);
-    
+
+    */
+    List<Content> content;
+    switch(option) {
+      case 1:
+        final docId = FirebaseFirestore.instance.collection('examples').doc("!!!!INSERT CURRENT USER USERNAME HERE!!!!!!").toString();
+        content = [Content.text("Give me a Putnam question about ${retrieveField(docId, "topic")} similar to ${retrieveField(docId, "question")}")];
+      case 2:
+
+      default:
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": "The option you selected was not valid, please try again.",
+            "isSender": false,
+          });
+        });
+        return;
+    }
+    final response = await model.generateContent(content);
+
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
@@ -225,5 +247,10 @@ class _ChatPageState extends State<ChatPage> {
         "isSender": false,
       });
     });
+  }
+
+  Future<String> retrieveField(String documentId, String fieldName) async {
+    DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
+    return (document.data() as Map<String, dynamic>) ['fieldName'];
   }
 }
