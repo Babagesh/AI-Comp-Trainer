@@ -22,9 +22,8 @@ class _ChatPageState extends State<ChatPage> {
   String username = "";
   bool user = false;
 
-  final usernameCompleter = Completer<void>();
+  var usernameCompleter = Completer<void>();
   late var uCompleter = usernameCompleter;
-  bool uCompleted = false;
 
   var answerCompleter = Completer<void>();
   late var aCompleter = answerCompleter;
@@ -141,7 +140,7 @@ class _ChatPageState extends State<ChatPage> {
                   MaterialButton(
                     onPressed: (){
                       setState(() {
-                        if(!uCompleted) {
+                        if(curText == "4") {
                           uCompleter.complete();
                         }
                         if(curText == "7") {
@@ -272,7 +271,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": "6. Get a hint\n7. Answer the question\n",
+        "message": "6. Get a hint\n7. Answer the question",
         "isSender": false,
       });
     });
@@ -280,8 +279,9 @@ class _ChatPageState extends State<ChatPage> {
 
   void addQuestion() async {
     getUsername();
+    usernameCompleter = Completer<void>();
+    uCompleter = usernameCompleter;
     await uCompleter.future;
-    uCompleted = true;
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
