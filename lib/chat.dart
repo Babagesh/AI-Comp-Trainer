@@ -23,12 +23,18 @@ class _ChatPageState extends State<ChatPage> {
   bool user = false;
   final completer = new Completer<void>();
   late var nextButtonCompleter = completer;
+  bool completed = false;
 
   @override
   void initState() async {
     super.initState();
+    initializeChat();
+  }
+
+  void initializeChat() async {
     getUsername();
-    await completer.future; 
+    await completer.future;
+    completed = true;
     populateNewUser();
     firstQ();
   }
@@ -115,7 +121,9 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(width: 4.0,),
                   MaterialButton(
                     onPressed: (){
-                      nextButtonCompleter.complete();
+                      if(!completed) {
+                        nextButtonCompleter.complete();
+                      }
                       setState(() {
                         if(_chatController.text.isNotEmpty){
                           _chatHistory.add({
