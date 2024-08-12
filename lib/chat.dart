@@ -1,11 +1,9 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'signup.dart';
+import 'dart:async';
 
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
@@ -23,13 +21,16 @@ class _ChatPageState extends State<ChatPage> {
   String curText = "";
   String username = "";
   bool user = false;
+  final completer = new Completer<void>();
+  late var nextButtonCompleter = completer;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     getUsername();
-    firstQ();
+    await completer.future; 
     populateNewUser();
+    firstQ();
   }
 
   @override
@@ -114,6 +115,7 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(width: 4.0,),
                   MaterialButton(
                     onPressed: (){
+                      nextButtonCompleter.complete();
                       setState(() {
                         if(_chatController.text.isNotEmpty){
                           _chatHistory.add({
@@ -174,8 +176,6 @@ class _ChatPageState extends State<ChatPage> {
     switch (curText) {
       case "1": 
         generateQuestion(1);
-      case "2":
-        generateQuestion(2);
       default:
         if(user) {
           setState(() {
@@ -188,7 +188,14 @@ class _ChatPageState extends State<ChatPage> {
         }
         else {
           username = _chatController.text;
-          _chatController.clear();
+          user = true;
+          setState(() {
+            _chatHistory.add({
+              "time": DateTime.now(),
+              "message": "Thanks for re-entering your username!",
+              "isSender": false,
+            });
+          });
         }
     } 
   }
@@ -197,7 +204,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
         _chatHistory.add({
           "time": DateTime.now(),
-          "message": "What would you like to do:\n1. Practice Putnam\n2. Practice LeetCode",
+          "message": "What would you like to do:\n1. Practice Putnam",
           "isSender": false,
         });
     });
@@ -222,34 +229,12 @@ class _ChatPageState extends State<ChatPage> {
   void generateQuestion(int option) async {
     const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
-    
-    /*
-    List<Map<String,String>> msg = [];
-    for (var i = 0; i < _chatHistory.length; i++) {
-      msg.add({"content": _chatHistory[i]["message"]});
-    }
 
-    Map<String, dynamic> request = {
-      "prompt": {
-        "messages": [msg]
-      },
-      "temperature": 0.25,
-      "candidateCount": 1,
-      "topP": 1,
-      "topK": 1
-    };
-
-    final content = [Content.text(jsonEncode(request))];
-    final response = await model.generateContent(content);
-
-    */
     List<Content> content;
     switch(option) {
       case 1:
         final docId = FirebaseFirestore.instance.collection('examples').doc(username).toString();
         content = [Content.text("Give me a Putnam question about ${retrieveField(docId, "topic")} similar to ${retrieveField(docId, "question")}")];
-      case 2:
-
       default:
         setState(() {
           _chatHistory.add({
@@ -273,6 +258,6 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<String> retrieveField(String documentId, String fieldName) async {
     DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
-    return (document.data() as Map<String, dynamic>) ['fieldName'] ?? '';
+    return (document.data() as Map<String, dynamic>) ['fieldName'];
   }
 }
