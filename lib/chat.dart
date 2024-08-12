@@ -1,8 +1,11 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'signup.dart';
 
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
@@ -18,10 +21,13 @@ class _ChatPageState extends State<ChatPage> {
   final List<Map<String, dynamic>> _chatHistory = [];
 
   String curText = "";
+  String username = "";
+  bool user = false;
 
   @override
   void initState() {
     super.initState();
+    getUsername();
     firstQ();
     populateNewUser();
   }
@@ -154,6 +160,16 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  void getUsername() {
+    setState(() {
+      _chatHistory.add({
+        "time": DateTime.now(),
+        "message": "Please re-enter your username.",
+        "isSender": false,
+      });
+    });
+  }
+
   void getAnswer() {
     switch (curText) {
       case "1": 
@@ -161,13 +177,19 @@ class _ChatPageState extends State<ChatPage> {
       case "2":
         generateQuestion(2);
       default:
-        setState(() {
-          _chatHistory.add({
-            "time": DateTime.now(),
-            "message": "That is not a valid option, please try again.",
-            "isSender": false,
+        if(user) {
+          setState(() {
+            _chatHistory.add({
+              "time": DateTime.now(),
+              "message": "That is not a valid option, please try again.",
+              "isSender": false,
+            });
           });
-        });
+        }
+        else {
+          username = _chatController.text;
+          _chatController.clear();
+        }
     } 
   }
 
@@ -187,7 +209,7 @@ class _ChatPageState extends State<ChatPage> {
       bool isNewUser = user.metadata.creationTime?.isAfter(DateTime.now().subtract(Duration(minutes: 5))) ?? false;
       if(isNewUser) {
         CollectionReference examples = FirebaseFirestore.instance.collection('examples');
-        examples.doc("!!!!INSERT CURRENT USER USERNAME HERE!!!!!!").set(<String, dynamic>{
+        examples.doc(username).set(<String, dynamic>{
           'type': "Putnam",
           'question': "A grasshopper starts at the origin in the coordinate plane and makes a sequence of hops. Each hop has length 5, and after each hop the grasshopper is at a point whose coordinates are both integers; thus, there are 12 possible locations for the grasshopper after the first hop. What is the smallest number of hops needed for the grasshopper to reach the point (2021,2021)?",
           'topic': "Optimization",
@@ -224,7 +246,7 @@ class _ChatPageState extends State<ChatPage> {
     List<Content> content;
     switch(option) {
       case 1:
-        final docId = FirebaseFirestore.instance.collection('examples').doc("!!!!INSERT CURRENT USER USERNAME HERE!!!!!!").toString();
+        final docId = FirebaseFirestore.instance.collection('examples').doc(username).toString();
         content = [Content.text("Give me a Putnam question about ${retrieveField(docId, "topic")} similar to ${retrieveField(docId, "question")}")];
       case 2:
 
