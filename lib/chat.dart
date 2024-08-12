@@ -235,47 +235,50 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void generateQuestion(int option) async {
-    const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
-    final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+  const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+  final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
 
-    List<Content> content;
-    switch(option) {
-      case 1:
-        final docId = username;
-        final ftopic = retrieveField(docId, "topic");
-        final fquestion = retrieveField(docId, "question");
-        String topic = "";
-        String question = "";
-        ftopic.then((String result) {
-          topic = result;
+  List<Content> content;
+
+  if (option == 1) {
+    final docId = username;
+    final topic = await retrieveField(docId, 'topic');
+    final question = await retrieveField(docId, 'question');
+    
+    content = [Content.text("Give me a Putnam question about $topic similar to $question")];
+
+    try {
+      final response = await model.generateContent(content);
+
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": response.text,
+          "isSender": false,
         });
-        fquestion.then((String result) {
-          question = result;
+      });
+    } catch (e) {
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "Error generating content: $e",
+          "isSender": false,
         });
-        content = [Content.text("Give me a Putnam question about $topic similar to $question")];
-      default:
-        setState(() {
-          _chatHistory.add({
-            "time": DateTime.now(),
-            "message": "The option you selected was not valid, please try again.",
-            "isSender": false,
-          });
-        });
-        return;
+      });
     }
-    final response = await model.generateContent(content);
-
+  } else {
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": response.text,
+        "message": "The option you selected was not valid, please try again.",
         "isSender": false,
       });
     });
   }
+}
 
   Future<String> retrieveField(String documentId, String fieldName) async {
     DocumentSnapshot document = await FirebaseFirestore.instance.collection('examples').doc(documentId).get();
-    return (document.data() as Map<String, dynamic>) ['fieldName'];
+    return (document.data() as Map<String, dynamic>)[fieldName] ?? 'Field not found';
   }
 }
