@@ -235,7 +235,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void generateQuestion(int option) async {
-  const apiKey = "AIzaSyB_VtqbTpHFjMZCgeC8UmG8Xn-yM2qTWEo";
+  const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
   final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
 
   List<Content> content;
