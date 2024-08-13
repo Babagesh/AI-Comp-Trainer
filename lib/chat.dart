@@ -21,6 +21,7 @@ class _ChatPageState extends State<ChatPage> {
   String curText = "";
   String username = "";
   bool user = false;
+  int documentNumber = 0;
 
   var usernameCompleter = Completer<void>();
   late var uCompleter = usernameCompleter;
@@ -34,9 +35,9 @@ class _ChatPageState extends State<ChatPage> {
   String currentTopic = "";
   String aiAnswer = "";
 
-  late CollectionReference putnam;
-  late CollectionReference scibowl;
-  late CollectionReference usercustom;
+  CollectionReference? putnam;
+  CollectionReference? scibowl;
+  CollectionReference? usercustom;
 
   // Controls the document ID of questions put into database
   int putnamqcount = 0;
@@ -138,31 +139,36 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   const SizedBox(width: 4.0,),
                   MaterialButton(
-                    onPressed: (){
+                    onPressed: () {
                       setState(() {
-                        if(curText == "4") {
+                        _chatHistory.add({
+                          "time": DateTime.now(),
+                          "message": _chatController.text,
+                          "isSender": true,
+                        });
+                        curText = _chatController.text;
+                        _chatController.clear();
+                        if(curText == "4" && !user) {
+                          addQuestion();
+                        }
+                        else if(curText.substring(0, 1) == ",") {
+                          username = curText;
+                          _chatHistory.add({
+                              "time": DateTime.now(),
+                              "message": "Thanks for entering a key!",
+                              "isSender": false,
+                          });
                           uCompleter.complete();
                         }
-                        if(curText == "7") {
+                        else if(curText.substring(0, 1) == "/") {
+                          userAnswer = curText;
                           aCompleter.complete();
                         }
-                        if(_chatController.text.isNotEmpty){
-                          _chatHistory.add({
-                            "time": DateTime.now(),
-                            "message": _chatController.text,
-                            "isSender": true,
-                          });
-                          curText = _chatController.text;
-                          if(curText.substring(0, 1) == "/") {
-                            userAnswer = curText;
-                          }
-                          else if(curText.substring(0, 1) == ".") {
-                            customQuestion(curText);
-                          }
-                          else {
-                            getAnswer();
-                          }
-                          _chatController.clear();
+                        else if(curText.substring(0, 1) == ".") {
+                          customQuestion(curText);
+                        }
+                        else {
+                          getAnswer();
                         }
                       });
                       _scrollController.jumpTo(
@@ -199,16 +205,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void getUsername() {
-    setState(() {
-      _chatHistory.add({
-        "time": DateTime.now(),
-        "message": "Please enter a key.",
-        "isSender": false,
-      });
-    });
-  }
-
   void getAnswer() {
     switch (curText) {
       case "1":
@@ -234,26 +230,13 @@ class _ChatPageState extends State<ChatPage> {
       case "7":
         checkAnswer();
       default:
-        if(user) {
-          setState(() {
-            _chatHistory.add({
-              "time": DateTime.now(),
-              "message": "That is not a valid option, please try again.",
-              "isSender": false,
-            });
+        setState(() {
+          _chatHistory.add({
+            "time": DateTime.now(),
+            "message": "That is not a valid option, please try again.",
+            "isSender": false,
           });
-        }
-        else {
-          username = _chatController.text;
-          user = true;
-          setState(() {
-            _chatHistory.add({
-              "time": DateTime.now(),
-              "message": "Thanks for entering a key!",
-              "isSender": false,
-            });
-          });
-        }
+        });
     } 
   }
 
@@ -278,14 +261,23 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void addQuestion() async {
-    getUsername();
-    usernameCompleter = Completer<void>();
-    uCompleter = usernameCompleter;
-    await uCompleter.future;
+    if(!user) {
+      setState(() {
+        _chatHistory.add({
+          "time": DateTime.now(),
+          "message": "Please enter a key prepended by a comma.",
+          "isSender": false,
+        });
+      });
+      usernameCompleter = Completer<void>();
+      uCompleter = usernameCompleter;
+      user = true;
+      await uCompleter.future;
+    }
     setState(() {
       _chatHistory.add({
         "time": DateTime.now(),
-        "message": "Enter the question you would like to add, prepended by a period. Also include the type (ex. Putnam), topic (ex. Optimization), and a hint, all separated by a period.",
+        "message": "Enter the question you would like to add, prepended by a period. Also include the type (ex. Putnam), topic (ex. Optimization), a hint, and a solution, all separated by a period.",
         "isSender": false,
       });
     });
@@ -298,8 +290,7 @@ class _ChatPageState extends State<ChatPage> {
       if(isNewUser) {
         putnam = FirebaseFirestore.instance.collection('putnam');
         scibowl = FirebaseFirestore.instance.collection('scibowl');
-        usercustom = FirebaseFirestore.instance.collection('usercustom');
-        putnam.doc("$putnamqcount").set(<String, dynamic>{
+        putnam?.doc("$putnamqcount").set(<String, dynamic>{
           'type': "Putnam",
           'question': "A grasshopper starts at the origin in the coordinate plane and makes a sequence of hops. Each hop has length 5, and after each hop the grasshopper is at a point whose coordinates are both integers; thus, there are 12 possible locations for the grasshopper after the first hop. What is the smallest number of hops needed for the grasshopper to reach the point (2021,2021)?",
           'topic': "Optimization",
@@ -307,7 +298,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         putnamqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "How many sigma and pi bonds, respectively, are there in a  molecule with the following formula: [read slowly] CH3CHCHCH2CH3",
           'topic': "Chemistry",
@@ -315,7 +306,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "What is the most common term used in genetics to describe the observable physical characteristics of an organism caused by the expression of a gene or set of genes?",
           'topic': "Biology",
@@ -323,7 +314,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "What is the biological term most often used for the act of a cell engulfing a particle by extending its pseudopodia (read as: SU-doe-POH-dee-ah) around the particle?",
           'topic': "Biology",
@@ -331,7 +322,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "What is the MOST common term for the type of energy that is most directly related to the energy of atoms, molecules and other small particles that are in random motion within a system?",
           'topic': "Physics",
@@ -339,7 +330,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "Factor the following expression completely:  81x2 + 180xy + 100y2",
           'topic': "Math",
@@ -347,7 +338,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "What is the name for the common ocean waves that are not driven by the wind but sustained by the energy they obtained by the sea?",
           'topic': "Earth Science",
@@ -355,7 +346,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': " A hexadecimal number is a numeral system with a radix or a base of what?",
           'topic': "General Science",
@@ -363,7 +354,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "The local group is generally referred to as a collection of what celestial objects?",
           'topic': "Astronomy",
@@ -371,7 +362,7 @@ class _ChatPageState extends State<ChatPage> {
           'timestamp': DateTime.now(),
         });
         scibowlqcount++;
-        scibowl.doc("$scibowlqcount").set(<String, dynamic>{
+        scibowl?.doc("$scibowlqcount").set(<String, dynamic>{
           'type': "Science Bowl",
           'question': "What is the molarity of a sodium hydroxide solution made by dissolving 4 grams NaOH in 250 milliliters of water?",
           'topic': "Chemistry",
@@ -384,12 +375,14 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void customQuestion(String pre) {
+    usercustom = FirebaseFirestore.instance.collection('usercustom');
     List<String> fields = pre.substring(1).split(".");
-    usercustom.doc("$usercustomqcount").set(<String, dynamic>{
+    usercustom?.doc("$usercustomqcount").set(<String, dynamic>{
       'type': fields[1],
       'question': fields[0],
       'topic': fields[2],
       'hint': fields[3],
+      'solution': fields[4],
       'timestamp': DateTime.now(),
     });
     usercustomqcount++;
@@ -407,7 +400,7 @@ class _ChatPageState extends State<ChatPage> {
   {
     User? username = FirebaseAuth.instance.currentUser;
     CollectionReference user = FirebaseFirestore.instance.collection('user');
-    user.doc(question).set(<String, dynamic>{
+    user.doc("$documentNumber").set(<String, dynamic>{
       'question': question,
       'subject' : subject,
       'topic' : topic,
@@ -545,8 +538,8 @@ class _ChatPageState extends State<ChatPage> {
   void generateHint() async {
     const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
-
-    final hint = await retrieveField(currentCollection, "$getDocId(currentCollection)", "hint");
+    int curId = getDocId(currentCollection);
+    final hint = await retrieveField(currentCollection, "$curId", "hint");
 
     var content = [Content.text("Give me a hint for the question, $curQuestion, similar to $hint")];
 
@@ -625,6 +618,7 @@ class _ChatPageState extends State<ChatPage> {
     }
     
     chatLog(curQuestion, userAnswer, aiAnswer, currentTopic, currentType);
+    documentNumber++;
 
   }
 }
