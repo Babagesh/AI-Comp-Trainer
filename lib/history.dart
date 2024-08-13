@@ -2,6 +2,8 @@ import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'timeline.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firestore_size/firestore_size.dart';
 
 class HistoryPage extends StatefulWidget{
   const HistoryPage({Key? key}) : super(key : key);
@@ -25,7 +27,7 @@ class _HistoryPageState extends State<HistoryPage>
         padding: const EdgeInsets.only(left: 30, right:  30),
         child: ListView(
           children: [
-            for(int i = 1; i < 5; i++)
+            for(int i = 0; i < 5; i++)
               TimeLineTileUI(
                 isFirst: false, 
                 isLast: false, 
@@ -37,7 +39,7 @@ class _HistoryPageState extends State<HistoryPage>
                     Icon(Icons.book_online, color: Colors.white),
                     SizedBox(width: 15,),
                     Text(
-                      'Every chat item after index 0',
+                      'answer',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   Text('    |   Date: {$DateTime.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
@@ -52,5 +54,11 @@ class _HistoryPageState extends State<HistoryPage>
         )
       ),
     );
+
+  }
+    Future<String> retrieveField(String cName, String documentId, String fieldName) async 
+    {
+    DocumentSnapshot document = await FirebaseFirestore.instance.collection(cName).doc(documentId).get();
+    return (document.data() as Map<String, dynamic>)[fieldName] ?? 'Field not found';
   }
 }
