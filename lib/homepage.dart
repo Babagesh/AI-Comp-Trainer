@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         ),
-        home:MainPage(),
+        home:const MainPage(),
       ),
     );
   }
@@ -85,12 +85,12 @@ class _MainPageState extends State<MainPage> {
                         width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                       onPressed: (){
                         FirebaseAuth.instance.signOut().then((value)
                         {
                           print("Signed Out");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
                         });
                     },
                 ),
@@ -161,12 +161,12 @@ class _MainPageState extends State<MainPage> {
                         width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                       onPressed: (){
                         FirebaseAuth.instance.signOut().then((value)
                         {
                           print("Signed Out");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
                         });
                     },
                 ),
@@ -228,12 +228,12 @@ class _MainPageState extends State<MainPage> {
                         width: MediaQuery.sizeOf(context).width / 4,
                       ),
                 ElevatedButton(
-                      child: Text('Logout'),
+                      child: const Text('Logout'),
                       onPressed: (){
                         FirebaseAuth.instance.signOut().then((value)
                         {
                           print("Signed Out");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignInScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
                         });
                     },
                 ),

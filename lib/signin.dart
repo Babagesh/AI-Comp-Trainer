@@ -4,7 +4,7 @@ import 'reusable_widgets.dart';
 import 'signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 class SignInScreen extends StatefulWidget{
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -12,8 +12,8 @@ class SignInScreen extends StatefulWidget{
 
 class _SignInScreenState extends State<SignInScreen>
 {
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
   @override 
   Widget build(BuildContext context)
   {
@@ -21,8 +21,8 @@ class _SignInScreenState extends State<SignInScreen>
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.lightBlue, const Color.fromARGB(255, 0, 140, 255)],
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(colors: [Colors.lightBlue, Color.fromARGB(255, 0, 140, 255)],
           begin: Alignment.topCenter, end: Alignment.bottomCenter
           ),
           ),
@@ -33,22 +33,22 @@ class _SignInScreenState extends State<SignInScreen>
             child: Column(
               children:<Widget> [
                   Image.asset("assets/images/Compete.png"),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   reusableTextField("Enter UserName", Icons.person_outline, false, _emailTextController),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   reusableTextField("Enter Password", Icons.lock_outline, true, _passwordTextController),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   signUpButton(context, true, () {
                     FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailTextController.text, password: _passwordTextController.text).then((value)
                     {
                       print("Signed in!");
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage()));
                     }).onError((error, stackTrace)
                     {
                       print("Error ${error.toString()}");
@@ -73,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen>
       GestureDetector(
         onTap: () {
           Navigator.push(context, 
-            MaterialPageRoute(builder: (context) => SignUpScreen())
+            MaterialPageRoute(builder: (context) => const SignUpScreen())
           );
         },
         child: const Text(

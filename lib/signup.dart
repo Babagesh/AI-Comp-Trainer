@@ -4,16 +4,16 @@ import 'homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({super.key});
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _emailTextController = TextEditingController();
-  TextEditingController _userNameTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _userNameTextController = TextEditingController();
 
 
   @override
@@ -31,14 +31,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(colors: [Colors.lightBlue, Color.fromARGB(255, 0, 140, 255)],
           begin: Alignment.topCenter, end: Alignment.bottomCenter
           ),
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20,120,20,0),
+              padding: const EdgeInsets.fromLTRB(20,120,20,0),
               child: Column(
                 children: <Widget>[
                   const SizedBox(
@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailTextController.text, password: _passwordTextController.text).then((value)
                     {
                       print("Created New Account");
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage()));
                     }).onError((error, stackTrace)
                     {
                       print("Error ${error.toString()}");

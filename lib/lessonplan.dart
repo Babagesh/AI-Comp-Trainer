@@ -182,7 +182,7 @@ class _EventEditingPageState extends State<EventEditingPage>{
         return date.add(time);
       }
       else{
-        final time;
+        final Object time;
         final timeOfDay = await showTimePicker(
           context: context,
           initialTime: TimeOfDay.fromDateTime(initialDate),

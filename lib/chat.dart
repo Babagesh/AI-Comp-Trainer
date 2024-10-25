@@ -4,6 +4,8 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class ChatPage extends StatefulWidget {
   static const routeName  = '/chat';
@@ -286,7 +288,7 @@ class _ChatPageState extends State<ChatPage> {
   void populateNewUser() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      bool isNewUser = user.metadata.creationTime?.isAfter(DateTime.now().subtract(Duration(minutes: 5))) ?? false;
+      bool isNewUser = user.metadata.creationTime?.isAfter(DateTime.now().subtract(const Duration(minutes: 5))) ?? false;
       if(isNewUser) {
         putnam = FirebaseFirestore.instance.collection('putnam');
         scibowl = FirebaseFirestore.instance.collection('scibowl');
@@ -411,7 +413,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void generateQuestion(int option) async {
-    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
+
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
 
     List<Content> content;
@@ -536,7 +539,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void generateHint() async {
-    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
     int curId = getDocId(currentCollection);
     final hint = await retrieveField(currentCollection, "$curId", "hint");
@@ -580,7 +583,7 @@ class _ChatPageState extends State<ChatPage> {
 
     await aCompleter.future;
 
-    const apiKey = "AIzaSyBUhqtUPV2MbAKPLtHZhxXZaKdgDG8TwCQ";
+    final String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
     final model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
 
     var content = [Content.text("Compare the answer for $curQuestion to the users answer, $curText. Ignore the '/' at the beginning of the user answer.")];

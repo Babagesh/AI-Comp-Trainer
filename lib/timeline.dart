@@ -12,12 +12,11 @@ class TimeLineTileUI extends StatelessWidget
   final eventChild;
 
   const TimeLineTileUI(
-    {Key? key,
+    {super.key,
     required this.isFirst,
     required this.isLast,
     required this.isPast,
-    required this.eventChild})
-     : super(key: key);
+    required this.eventChild});
 
 @override
 
@@ -29,16 +28,16 @@ Widget build (BuildContext context)
       isFirst: isFirst,
       isLast: isLast,
       beforeLineStyle: LineStyle(
-        color: isPast ? Color(0xFF6495ED): Color(0xFF6495ED),
+        color: isPast ? const Color(0xFF6495ED): const Color(0xFF6495ED),
     ),
     indicatorStyle: IndicatorStyle(
       width: 40,
-      color: isPast ? Color(0xFF0000FF): Color(0xFF0000FF),
+      color: isPast ? const Color(0xFF0000FF): const Color(0xFF0000FF),
       iconStyle: IconStyle(
         // if wrong change icon as well
         iconData: Icons.check_circle,
         // Make the second or first color red if the user gets the question wrong
-      color: isPast ? Colors.greenAccent:Color(0xFFB0A695),
+      color: isPast ? Colors.greenAccent:const Color(0xFFB0A695),
     ),
     ),
     endChild: EventPath(
@@ -52,7 +51,7 @@ Widget build (BuildContext context)
 class EventPath extends StatelessWidget{
   final bool  isPast;
   final childWidget;
-  const EventPath({Key? key, required this.isPast, required this.childWidget}) : super(key : key);
+  const EventPath({super.key, required this.isPast, required this.childWidget});
 
 
   @override
@@ -60,11 +59,11 @@ class EventPath extends StatelessWidget{
   {
     return Container(
       decoration: BoxDecoration(
-        color: isPast? Color(0xFF6495ED): Color(0xFF6495ED),
+        color: isPast? const Color(0xFF6495ED): const Color(0xFF6495ED),
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.all(25),
-      margin: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(25),
+      margin: const EdgeInsets.all(20),
       child: childWidget,
     ); 
   }

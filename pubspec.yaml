@@ -11,6 +11,7 @@ environment:
 dependencies:
   cloud_firestore: ^4.14.0
   cupertino_icons: ^1.0.6
+  dotenv: ^4.2.0
   english_words: any
   env_variables: ^1.0.1
   firebase_auth: ^4.16.0
@@ -19,6 +20,7 @@ dependencies:
   firestore_size: ^1.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
   google_generative_ai: ^0.4.4
   gradient_borders: ^1.0.0
   gradient_txt: ^1.0.0
@@ -37,3 +39,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - .env

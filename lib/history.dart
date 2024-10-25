@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firestore_size/firestore_size.dart';
 
 class HistoryPage extends StatefulWidget{
-  const HistoryPage({Key? key}) : super(key : key);
+  const HistoryPage({super.key});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -36,17 +36,17 @@ class _HistoryPageState extends State<HistoryPage>
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                   Row(children: [
-                    Icon(Icons.book_online, color: Colors.white),
-                    SizedBox(width: 15,),
-                    Text(
+                    const Icon(Icons.book_online, color: Colors.white),
+                    const SizedBox(width: 15,),
+                    const Text(
                       'answer',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                  Text('    |   Date: {$DateTime.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text('    |   Date: {$DateTime.day}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 ],
                 ),
-                Text('Question: ', style: TextStyle(color: Colors.white),),
-                Text('Answer: ', style: TextStyle(color: Colors.white),),
+                const Text('Question: ', style: TextStyle(color: Colors.white),),
+                const Text('Answer: ', style: TextStyle(color: Colors.white),),
               ],
               ),
             ), 

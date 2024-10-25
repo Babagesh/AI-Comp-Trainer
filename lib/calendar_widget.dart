@@ -53,6 +53,8 @@ class CalendarPage extends StatelessWidget
 }
 
 class TasksWidget extends StatefulWidget{
+  const TasksWidget({super.key});
+
   @override
   _TasksWidgetState createState() => _TasksWidgetState();
 }
@@ -66,7 +68,7 @@ class _TasksWidgetState extends State<TasksWidget>
 
     if(selectedEvents.isEmpty)
     {
-      return Center(
+      return const Center(
         child: Text(
         'No Events Found!',
         style: TextStyle(color: Colors.black, fontSize: 24),
@@ -74,7 +76,7 @@ class _TasksWidgetState extends State<TasksWidget>
       );
     }
     return SfCalendarTheme(
-      data: SfCalendarThemeData(
+      data: const SfCalendarThemeData(
       timeTextStyle: TextStyle(fontSize: 16, color: Colors.black)
       ),
       child: SfCalendar(
@@ -83,7 +85,7 @@ class _TasksWidgetState extends State<TasksWidget>
         initialDisplayDate: provider.SelectedDate,
         appointmentBuilder: appointmentBuilder,
         todayHighlightColor: Colors.black,
-        selectionDecoration: BoxDecoration(
+        selectionDecoration: const BoxDecoration(
           color: Colors.transparent,
         ),
         onTap: (details) {},
@@ -108,7 +110,7 @@ class _TasksWidgetState extends State<TasksWidget>
           event.title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,
